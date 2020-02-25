@@ -1,0 +1,162 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ioperand.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/10 13:46:57 by ghdesfos          #+#    #+#             */
+/*   Updated: 2020/02/18 18:39:36 by ghdesfos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef IOPERAND_HPP
+# define IOPERAND_HPP
+
+# include "abstract_vm.hpp"
+# include "operand_factory.hpp"
+
+class OperandFactory
+{
+public:
+	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
+
+private:
+	IOperand const * createInt8( std::string const & value ) const;
+	IOperand const * createInt16( std::string const & value ) const;
+	IOperand const * createInt32( std::string const & value ) const;
+	IOperand const * createFloat( std::string const & value ) const;
+	IOperand const * createDouble( std::string const & value ) const;	
+}
+
+class IOperand
+{
+public:
+	virtual int getPrecision( void ) const = 0;
+	virtual eOperandType getType( void ) const = 0;
+
+	virtual IOperand const * operator+( IOperand const & rhs ) const = 0;
+	virtual IOperand const * operator-( IOperand const & rhs ) const = 0;
+	virtual IOperand const * operator*( IOperand const & rhs ) const = 0;
+	virtual IOperand const * operator/( IOperand const & rhs ) const = 0;
+	virtual IOperand const * operator%( IOperand const & rhs ) const = 0;
+	virtual std::string const & toString( void ) const = 0;
+
+	virtual ~IOperand( void ) {}
+};
+
+
+class AOperand : public IOperand
+{
+public:
+	static	OperandFactory	factory;
+
+	virtual IOperand const * operator+( IOperand const & rhs ) const;
+	virtual IOperand const * operator-( IOperand const & rhs ) const;
+	virtual IOperand const * operator*( IOperand const & rhs ) const;
+	virtual IOperand const * operator/( IOperand const & rhs ) const;
+	virtual IOperand const * operator%( IOperand const & rhs ) const;
+}
+
+
+class Int8 : public AOperand
+{
+public:
+	Int8(void);
+	Int8(const Int8 & rhs);
+	Int8(char n);
+	~Int8(void);
+	Int8 & operator=(const Int8 & rhs);
+
+public:
+	int					getPrecision( void ) const;
+	eOperandType		getType( void ) const;
+	std::string const &	toString( void ) const;
+	char				getVal( void ) const;
+
+private:
+	char		_val;
+	std::string	_str;
+};
+
+
+class Int16 : public AOperand
+{
+public:
+	Int16(void);
+	Int16(const Int16 & rhs);
+	Int16(short n);
+	~Int16(void);
+	Int16 & operator=(const Int16 & rhs);
+
+public:
+	int					getPrecision( void ) const;
+	eOperandType		getType( void ) const;
+	std::string const &	toString( void ) const;
+
+private:
+	short		_val;
+	std::string	_str;
+};
+
+
+class Int32 : public AOperand
+{
+public:
+	Int32(void);
+	Int32(const Int32 & rhs);
+	Int32(int n);
+	~Int32(void);
+	Int32 & operator=(const Int32 & rhs);
+
+public:
+	int					getPrecision( void ) const;
+	eOperandType		getType( void ) const;
+	std::string const &	toString( void ) const;
+
+private:
+	int			_val;
+	std::string	_str;
+};
+
+
+class Float : public AOperand
+{
+public:
+	Float(void);
+	Float(const Float & rhs);
+	Float(float n);
+	~Float(void);
+	Float & operator=(const Float & rhs);
+
+public:
+	int					getPrecision( void ) const;
+	eOperandType		getType( void ) const;
+	std::string const &	toString( void ) const;
+
+private:
+	float		_val;
+	std::string	_str;
+};
+
+
+class Double : public AOperand
+{
+public:
+	Double(void);
+	Double(const Double & rhs);
+	Double(double n);
+	~Double(void);
+	Double & operator=(const Double & rhs);
+
+public:
+	int					getPrecision( void ) const;
+	eOperandType		getType( void ) const;
+	std::string const &	toString( void ) const;
+
+private:
+	double		_val;
+	std::string	_str;
+};
+
+#endif
