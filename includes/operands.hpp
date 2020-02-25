@@ -1,33 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ioperand.hpp                                       :+:      :+:    :+:   */
+/*   operands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/10 13:46:57 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/18 18:39:36 by ghdesfos         ###   ########.fr       */
+/*   Created: 2020/02/18 19:40:00 by ghdesfos          #+#    #+#             */
+/*   Updated: 2020/02/24 19:11:39 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IOPERAND_HPP
-# define IOPERAND_HPP
+#ifndef OPERANDS_HPP
+# define OPERANDS_HPP
 
 # include "abstract_vm.hpp"
 # include "operand_factory.hpp"
-
-class OperandFactory
-{
-public:
-	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
-
-private:
-	IOperand const * createInt8( std::string const & value ) const;
-	IOperand const * createInt16( std::string const & value ) const;
-	IOperand const * createInt32( std::string const & value ) const;
-	IOperand const * createFloat( std::string const & value ) const;
-	IOperand const * createDouble( std::string const & value ) const;	
-}
 
 class IOperand
 {
@@ -56,8 +43,8 @@ public:
 	virtual IOperand const * operator*( IOperand const & rhs ) const;
 	virtual IOperand const * operator/( IOperand const & rhs ) const;
 	virtual IOperand const * operator%( IOperand const & rhs ) const;
-}
-
+	virtual std::string const & toString( void ) const = 0;
+};
 
 class Int8 : public AOperand
 {

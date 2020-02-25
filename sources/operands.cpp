@@ -6,17 +6,18 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 16:17:08 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/18 19:11:09 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 19:04:57 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "abstract_vm.hpp"
-#include "ioperand_hpp"
+#include "operands.hpp"
+#include "exceptions.hpp"
 
 // COULDN'T there be an overflow or underflow when we add 2 numbers too big.
 // SHOULDN'T we check for overflow here?
 
-virtual IOperand const * AOperand::operator+( IOperand const & rhs ) const
+IOperand const * AOperand::operator+( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
 	std::stringstream sstr;
@@ -24,7 +25,7 @@ virtual IOperand const * AOperand::operator+( IOperand const & rhs ) const
 	return (this->factory.createOperand(type, sstr.str()));
 }
 
-virtual IOperand const * AOperand::operator-( IOperand const & rhs ) const
+IOperand const * AOperand::operator-( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
 	std::stringstream sstr;
@@ -32,7 +33,7 @@ virtual IOperand const * AOperand::operator-( IOperand const & rhs ) const
 	return (this->factory.createOperand(type, sstr.str()));
 }
 
-virtual IOperand const * AOperand::operator*( IOperand const & rhs ) const
+IOperand const * AOperand::operator*( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
 	std::stringstream sstr;
@@ -40,23 +41,23 @@ virtual IOperand const * AOperand::operator*( IOperand const & rhs ) const
 	return (this->factory.createOperand(type, sstr.str()));
 }
 
-virtual IOperand const * AOperand::operator/( IOperand const & rhs ) const
+IOperand const * AOperand::operator/( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
 	std::stringstream sstr;
 	if (std::stod(rhs.toString()) == 0.0)
-		throw divisionByZero();
+		throw DivisionByZero();
 	sstr << std::stod(this->toString()) / std::stod(rhs.toString());
 	return (this->factory.createOperand(type, sstr.str()));
 }
 
-virtual IOperand const * AOperand::operator%( IOperand const & rhs ) const
+IOperand const * AOperand::operator%( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
 	std::stringstream sstr;
 	if (std::stod(rhs.toString()) == 0.0)
-		throw divisionByZero();
-	sstr << std::stod(this->toString()) % std::stod(rhs.toString());
+		throw DivisionByZero();
+	sstr << std::stoi(this->toString()) % std::stoi(rhs.toString());
 	return (this->factory.createOperand(type, sstr.str()));
 }
 
@@ -66,16 +67,17 @@ virtual IOperand const * AOperand::operator%( IOperand const & rhs ) const
 
 Int8::Int8(void) : _val(0), _str("") { return ; }
 Int8::Int8(const Int8 & rhs) { *this = rhs; }
-Int8::Int8(char n) : mval(n) {
+Int8::Int8(char n) : _val(n) {
 	std::stringstream s;
 	s << n;
 	this->_str = s.str();
 };
 Int8::~Int8(void) { return ; };
-Int8 & Int8::operator=(const Int8 & rhs)
+class Int8 & Int8::operator=(const Int8 & rhs)
 {
 	this->_val = rhs._val;
 	this->_str = rhs._str;
+	return (*this);
 }
 
 int					Int8::getPrecision(void) const { return 0; }
@@ -93,10 +95,11 @@ Int16::Int16(short n) : _val(n) {
 	this->_str = s.str();
 };
 Int16::~Int16(void) { return ; };
-Int16 & Int16::operator=(const Int16 & rhs)
+class Int16 & Int16::operator=(const Int16 & rhs)
 {
 	this->_val = rhs._val;
 	this->_str = rhs._str;
+	return (*this);
 }
 
 int					Int16::getPrecision(void) const { return 0; }
@@ -113,10 +116,11 @@ Int32::Int32(int n) : _val(n) {
 	this->_str = s.str();
 };
 Int32::~Int32(void) { return ; };
-Int32 & Int32::operator=(const Int32 & rhs)
+class Int32 & Int32::operator=(const Int32 & rhs)
 {
 	this->_val = rhs._val;
 	this->_str = rhs._str;
+	return (*this);
 }
 
 int					Int32::getPrecision(void) const { return 0; }
@@ -133,10 +137,11 @@ Float::Float(float n) : _val(n) {
 	this->_str = s.str();
 };
 Float::~Float(void) { return ; };
-Float & Float::operator=(const Float & rhs)
+class Float & Float::operator=(const Float & rhs)
 {
 	this->_val = rhs._val;
 	this->_str = rhs._str;
+	return (*this);
 }
 
 int					Float::getPrecision(void) const { return 7; }
@@ -153,10 +158,11 @@ Double::Double(double n) : _val(n) {
 	this->_str = s.str();
 };
 Double::~Double(void) { return ; };
-Double & Double::operator=(const Double & rhs)
+class Double & Double::operator=(const Double & rhs)
 {
 	this->_val = rhs._val;
 	this->_str = rhs._str;
+	return (*this);
 }
 
 int					Double::getPrecision(void) const { return 15; }

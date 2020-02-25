@@ -6,17 +6,20 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 13:48:56 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/18 14:02:23 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 19:46:13 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "abstract_vm.hpp"
+#include "operands.hpp"
+#include "exceptions.hpp"
 
 IOperand const * OperandFactory::createInt8( std::string const & value ) const
 {
+	int nb;
 	try
 	{
-		int nb = std::stoi(value);
+		nb = std::stoi(value);
 	}
 	catch (std::exception & e)
 	{
@@ -26,15 +29,16 @@ IOperand const * OperandFactory::createInt8( std::string const & value ) const
 		throw Underflow();
 	if (nb > std::numeric_limits<char>::max())
 		throw Overflow();
-	Int8 operand = new Int8(static_cast<char>(nb));
+	class Int8 *operand = new class Int8(static_cast<char>(nb));
 	return (operand);
 }
 
-IOperand const * OperandFactory::createInt16( std::string const & value ) const;
+IOperand const * OperandFactory::createInt16( std::string const & value ) const
 {
+	int nb;
 	try
 	{
-		int nb = std::stoi(value);
+		nb = std::stoi(value);
 	}
 	catch (std::exception & e)
 	{
@@ -44,15 +48,16 @@ IOperand const * OperandFactory::createInt16( std::string const & value ) const;
 		throw Underflow();
 	if (nb > std::numeric_limits<short>::max())
 		throw Overflow();
-	Int16 operand = new Int16(static_cast<short>(nb));
+	class Int16 *operand = new class Int16(static_cast<short>(nb));
 	return (operand);
 }
 
-IOperand const * OperandFactory::createInt32( std::string const & value ) const;
+IOperand const * OperandFactory::createInt32( std::string const & value ) const
 {
+	int nb;
 	try
 	{
-		int nb = std::stoi(value);
+		nb = std::stoi(value);
 	}
 	catch (std::exception & e)
 	{
@@ -62,46 +67,50 @@ IOperand const * OperandFactory::createInt32( std::string const & value ) const;
 		throw Underflow();
 	if (nb > std::numeric_limits<int>::max())
 		throw Overflow();
-	Int32 operand = new Int32(nb);
+	class Int32 *operand = new class Int32(nb);
 	return (operand);
 }
 
-IOperand const * OperandFactory::createFloat( std::string const & value ) const;
+IOperand const * OperandFactory::createFloat( std::string const & value ) const
 {
+	float nb;
 	try
 	{
-		float nb = std::stof(value);
+		nb = std::stof(value);
 	}
 	catch (std::exception & e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
-	Float operand = new Float(nb);
+	class Float *operand = new class Float(nb);
 	return (operand);
 }
 
-IOperand const * OperandFactory::createDouble( std::string const & value ) const;
+IOperand const * OperandFactory::createDouble( std::string const & value ) const
 {
+	double nb;
 	try
 	{
-		double nb = std::stod(value);
+		nb = std::stod(value);
 	}
 	catch (std::exception & e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
-	Double operand = new Double(nb);
+	class Double *operand = new class Double(nb);
 	return (operand);
 }
 
 IOperand const * OperandFactory::createOperand( eOperandType type, std::string const & value ) const
 {
+	IOperand const *operand;
 	try
 	{
-		((this->_createOperandArray).at(type))(value);
+		operand = (this->*_createOperandArray[type])(value);
 	}
 	catch (std::exception & e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
+	return (operand);
 }

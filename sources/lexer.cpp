@@ -6,17 +6,18 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/16 14:28:38 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/17 20:15:35 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 19:23:08 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "abstract_vm.hpp"
 #include "lexer.hpp"
+#include "exceptions.hpp"
 
 Lexer::Lexer(void) : _error(0) {}
 Lexer::Lexer(const Lexer & l)
 {
-	*this = rhs;
+	*this = l;
 }
 Lexer::~Lexer(void) {}
 Lexer & Lexer::operator=(const Lexer & rhs)
@@ -30,7 +31,7 @@ Lexer & Lexer::operator=(const Lexer & rhs)
 Lexer::Lexer(int argc, char **argv) : _error(false)
 {
 	if (argc == 1)
-		this->tokenizer(std::cin, 0);
+		this->_tokenizer(std::cin, 0);
 	else if (argc == 2)
 	{
 		std::ifstream ifs(argv[1]);
@@ -42,14 +43,14 @@ Lexer::Lexer(int argc, char **argv) : _error(false)
 		else
 		{
 			this->_error = true;
-			throw // EXCEPTION_FILE_NOT_OPEN;
+			throw FileNotOpen();
 		}
 	}
 	else
-		throw // EXCEPTION_TOO_MANY_ARGUMENTS;
+		throw TooManyArguments();
 }
 
-#define COMMENT_CHAR	;
+#define COMMENT_CHAR	';'
 
 void	Lexer::_removeComment(char *line)
 {
@@ -62,29 +63,29 @@ void	Lexer::_removeComment(char *line)
 
 void	Lexer::_addTokenToList(tokenType type, char *value)
 {
-	struct token	new new_token;
+	struct token	*new_token = new struct token;
 
-	new_token.type = type;
-	new_token.value.assign(value);
+	new_token->type = type;
+	new_token->value.assign(value);
 	this->_tokenList.push_back(new_token);
 }
 
 void	Lexer::_analyseToken(char *str)
 {
-	std::cmatch	match
+	std::cmatch	match;
 	std::regex	regex;
 
 	for (auto & e : Lexer::_patternMap)
 	{
 		regex = e.first;
 		std::regex_match(str, match, regex);
-		if (match)
+		if (!match.empty())
 		{
 			this->_addTokenToList(e.second, str);
 			return ;	
 		}
 	}
-	throw //EXCEPTION_NOT_A_VALID_TOKEN;
+	throw NotAValidToken();
 }
 
 #define SEPARATOR	" \t\r"
@@ -114,7 +115,7 @@ void	Lexer::_tokenizer(std::istream & stream, int mode)
 			word = std::strtok(NULL, SEPARATOR);
 		}
 
-		this->_addTokenToList(tokenType::NL, "new line");
+		this->_addTokenToList(tokenType::NL, (char*)"new line");
 		delete [] line;
 	}
 }

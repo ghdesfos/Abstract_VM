@@ -6,12 +6,13 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/17 14:14:47 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/18 17:54:21 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 19:46:28 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "abstract_vm.hpp"
 #include "parser.hpp"
+#include "exceptions.hpp"
 
 // the input is a list of tokens
 // we should check this "stream" of tokens
@@ -21,6 +22,34 @@
 
 // BESOIN de free tout a la fin
 
+std::map<std::string, actionFct>	Parser::_actionMap =
+{
+	{"pop", &Parser::_pop},
+	{"dump", &Parser::_dump},
+	{"add", &Parser::_add},
+	{"sub", &Parser::_sub},
+	{"mul", &Parser::_mul},
+	{"div", &Parser::_div},
+	{"mod", &Parser::_mod},
+	{"print", &Parser::_print},
+	{"exit", &Parser::_exit}
+};
+
+std::map<std::string, instructionFct>	Parser::_instructionMap =
+{
+	{"push", &Parser::_push},
+	{"assert", &Parser::_assert}
+};
+
+std::map<std::string, eOperandType>		Parser::_operandTypeMap =
+{
+	{"Int8", eOperandType::Int8},
+	{"Int16", eOperandType::Int16},
+	{"Int32", eOperandType::Int32},
+	{"Float", eOperandType::Float},
+	{"Double", eOperandType::Double}
+};
+
 Parser::Parser(void) {}
 Parser::Parser(const Parser & rhs)
 {
@@ -29,7 +58,9 @@ Parser::Parser(const Parser & rhs)
 Parser::~Parser(void) {}
 Parser & Parser::operator=(const Parser & rhs)
 {
-// TBD
+	this->_tokenList = rhs._tokenList;
+	this->_stack = rhs._stack;
+	return (*this);
 }
 
 Parser::Parser(std::list<struct token> tokenList)
@@ -42,65 +73,61 @@ Parser::Parser(std::list<struct token> tokenList)
 **	possible grammar sequence: [NL], [ACTION] [NL], [INSTR] [PARAM] [NL]
 */
 
-void	Parser::_expect(tokenType type,
-							std::list<struct token>::iterator it, 
-							int rk)
+void			Parser::_expect(tokenType type,
+							std::list<struct token>::iterator it)
 {
-	int i = -1;
-	while (++i < rk)
-	{
-		if (it + i == this->_tokenList.end())
-			throw // EXCEPTION_SYNTAX_GRAMMAR_ERROR;
-	}
-	if (type == (it + rk)->type)
+	if (it == this->_tokenList.end())
+		throw SyntaxGrammarError();
+	if (type == it->type)
 		return ;
-	throw // EXCEPTION_SYNTAX_GRAMMAR_ERROR;
+	throw SyntaxGrammarError();
 }
 
-void	Parser::_triggerAction(std::string & action)
+void			Parser::_triggerAction(std::string & action)
 {
 	for (auto & e : this->_actionMap)
 	{
 		if (action.compare(e.first) == 0)
 		{
-			(e.second)();
+			(this->*(e.second))();
 			return ;
 		}
 	}
-	throw // EXCEPTION_UNKNOWN_ACTION;
+	throw UnknownAction();
 }
 
-int		Parser::_getParameterType(std::string & str)
+eOperandType	Parser::_getParameterType(std::string & str)
 {
 	for (auto & e : this->_operandTypeMap)
 	{
-		char *operandStr = e.first;
-		if (str.compare(0, strlen(operandStr), operandStr) == 0)
-			return (type = e.second);
+		std::string operandStr = e.first;
+		if (str.compare(0, operandStr.length(), operandStr) == 0)
+			return (e.second);
 	}
+	throw UnknownType();
 }
 
-void	Parser::_triggerInstruction(std::string & instruction,
+void			Parser::_triggerInstruction(std::string & instruction,
 										std::string & wrappedParam)
 {
 	eOperandType operandType = this->_getParameterType(wrappedParam);
 
 	size_t startSubstr = wrappedParam.find('(') + 1;
-	size_t lenSubstr = wrappedParam.find(')') - start;
+	size_t lenSubstr = wrappedParam.find(')') - startSubstr;
 	std::string unwrappedParam = wrappedParam.substr(startSubstr, lenSubstr);
 
 	for (auto & e : this->_instructionMap)
 	{
 		if (instruction.compare(e.first) == 0)
 		{
-			(e.second)(operandType, unwrappedParam);
+			(this->*(e.second))(operandType, unwrappedParam);
 			return ;
 		}
 	}
-	throw // EXCEPTION_UNKNOWN_INSTRUCTION;
+	throw UnknownInstruction();
 }
 
-void	Parser::_parserizer(void)
+void			Parser::_parserizer(void)
 {
 	for (std::list<struct token>::iterator it = this->_tokenList.begin()
 			; it != this->_tokenList.end() ; it++)
@@ -110,53 +137,21 @@ void	Parser::_parserizer(void)
 			continue ;
 		else if (it->type == tokenType::ACTION)
 		{
-			expect(tokenType::NL, it, 1);
-			this->_triggerAction(it->value);
-			it += 1;
+			auto currIt = it;
+			auto nextIt = ++it;
+			this->_expect(tokenType::NL, nextIt);
+			this->_triggerAction(currIt->value);
 		}
 		else if (it->type == tokenType::INSTR)
 		{
-			expect(tokenType::PARAM, it, 1);
-			expect(tokenType::NL, it, 2);
-			this->_triggerInstruction(it->value, (it + 1)->value);
-			it += 2;
+			auto currIt = it;
+			auto nextIt = ++it;
+			auto nextNextIt = ++it;
+			this->_expect(tokenType::PARAM, nextIt);
+			this->_expect(tokenType::NL, nextNextIt);
+			this->_triggerInstruction(currIt->value, nextIt->value);
 		}
 		else
-			throw // EXCEPTION_SYNTAX_GRAMMAR_ERROR;
+			throw SyntaxGrammarError();
 	}
-}
-
-
-
-
-
-
-
-
-std::map<char*, commandFunction*>	Parser::_actionMap =
-{
-	{"pop", &Parser::_pop},
-	{"dump", &Parser::_dump},
-	{"add", &Parser::_add},
-	{"sub", &Parser::_sub},
-	{"mul", &Parser::_mul},
-	{"div", &Parser::_div},
-	{"mod", &Parser::_mod},
-	{"print", &Parser::_print},
-	{"exit", &Parser::_exit}
-}
-
-std::map<char*, commandFunction*>	Parser::_instructionMap =
-{
-	{"push", &Parser::_push},
-	{"assert", &Parser::_assert}
-}
-
-std::map<char*, eOperandType>		Parser::_operandTypeMap =
-{
-	{"Int8", eOperandType::Int8},
-	{"Int16", eOperandType::Int16},
-	{"Int32", eOperandType::Int32},
-	{"Float", eOperandType::Float},
-	{"Double", eOperandType::Double}
 }

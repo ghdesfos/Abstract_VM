@@ -6,14 +6,14 @@
 #    By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/08 13:28:43 by ghdesfos          #+#    #+#              #
-#    Updated: 2020/02/08 13:42:34 by ghdesfos         ###   ########.fr        #
+#    Updated: 2020/02/24 18:41:03 by ghdesfos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= abstract_vm
 
 CC			= g++
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -std=c++11
 RM			= /bin/rm -rf
 
 INCLUDES	= -I includes/
@@ -21,6 +21,12 @@ INCLUDES	= -I includes/
 HEADERS		= includes/abstract_vm.h
 
 FUNCTIONS	= abstract_vm.cpp\
+				operands.cpp\
+				operand_factory.cpp\
+				lexer.cpp\
+				parser.cpp\
+				parser_commands.cpp\
+				exceptions.cpp
 			
 FILES		= $(addprefix sources/, $(FUNCTIONS))
 OBJECTS		= $(FILES:.c=.o)
@@ -35,6 +41,8 @@ g: $(OBJECTS) $(HEADERS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(HEADERS):
 
 clean:
 	$(RM) $(OBJECTS)

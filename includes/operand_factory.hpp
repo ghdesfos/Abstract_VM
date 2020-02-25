@@ -6,7 +6,7 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 13:54:47 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/18 14:19:50 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 19:14:49 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,15 @@
 
 #include "abstract_vm.hpp"
 
-typedef IOperand const * createOperand( std::string const & value ) const;
+/*
+**	Good article on pointer to member functions:
+**	https://isocpp.org/wiki/faq/pointers-to-members
+*/
+
+class IOperand;
+class OperandFactory;
+
+typedef IOperand const * (OperandFactory::*createOperandFct)( std::string const & value ) const;
 
 class OperandFactory
 {
@@ -29,14 +37,15 @@ private:
 	IOperand const * createFloat( std::string const & value ) const;
 	IOperand const * createDouble( std::string const & value ) const;
 
-	std::array<createOperand*> _createOperandArray
+	
+	createOperandFct	_createOperandArray[5] =
 	{
-		&createInt8,
-		&createInt16,
-		&createInt32,
-		&createFloat,
-		&createDouble
+		&OperandFactory::createInt8,
+		&OperandFactory::createInt16,
+		&OperandFactory::createInt32,
+		&OperandFactory::createFloat,
+		&OperandFactory::createDouble
 	};
-}
+};
 
 #endif
