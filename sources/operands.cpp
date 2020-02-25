@@ -6,7 +6,7 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 16:17:08 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/24 19:04:57 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 19:55:48 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 // COULDN'T there be an overflow or underflow when we add 2 numbers too big.
 // SHOULDN'T we check for overflow here?
+
+OperandFactory	AOperand::factory;
 
 IOperand const * AOperand::operator+( IOperand const & rhs ) const
 {

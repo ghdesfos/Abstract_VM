@@ -6,7 +6,7 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 19:40:00 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/24 19:11:39 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 19:54:17 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ public:
 class AOperand : public IOperand
 {
 public:
-	static	OperandFactory	factory;
+	static OperandFactory	factory;
 
 	virtual IOperand const * operator+( IOperand const & rhs ) const;
 	virtual IOperand const * operator-( IOperand const & rhs ) const;
