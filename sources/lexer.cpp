@@ -6,13 +6,20 @@
 /*   By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/16 14:28:38 by ghdesfos          #+#    #+#             */
-/*   Updated: 2020/02/24 19:23:08 by ghdesfos         ###   ########.fr       */
+/*   Updated: 2020/02/24 21:00:22 by ghdesfos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "abstract_vm.hpp"
 #include "lexer.hpp"
 #include "exceptions.hpp"
+
+std::map<std::string, tokenType> Lexer::_patternMap =
+{
+	{"(and|or|pop|dump|add|sub|mul|div|mod|exit|print)", ACTION},
+	{"(push|assert)", INSTR},
+	{"(((int8|int16|int32)\\(-?[0-9]+\\))|((float|double)\\(-?[0-9]+\\.[0-9]+\\)))", PARAM}
+};
 
 Lexer::Lexer(void) : _error(0) {}
 Lexer::Lexer(const Lexer & l)
@@ -67,7 +74,7 @@ void	Lexer::_addTokenToList(tokenType type, char *value)
 
 	new_token->type = type;
 	new_token->value.assign(value);
-	this->_tokenList.push_back(new_token);
+	this->_tokenList.push_back(*new_token);
 }
 
 void	Lexer::_analyseToken(char *str)
@@ -118,4 +125,9 @@ void	Lexer::_tokenizer(std::istream & stream, int mode)
 		this->_addTokenToList(tokenType::NL, (char*)"new line");
 		delete [] line;
 	}
+}
+
+std::list<struct token>	Lexer::getTokenList(void)
+{
+	return (this->_tokenList);
 }

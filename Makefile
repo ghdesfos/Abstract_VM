@@ -6,7 +6,7 @@
 #    By: ghdesfos <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/08 13:28:43 by ghdesfos          #+#    #+#              #
-#    Updated: 2020/02/24 18:41:03 by ghdesfos         ###   ########.fr        #
+#    Updated: 2020/02/24 20:10:01 by ghdesfos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ FUNCTIONS	= abstract_vm.cpp\
 				exceptions.cpp
 			
 FILES		= $(addprefix sources/, $(FUNCTIONS))
-OBJECTS		= $(FILES:.c=.o)
+OBJECTS		= $(FILES:.cpp=.o)
 
 all: $(NAME)
 
@@ -39,7 +39,7 @@ $(NAME): $(OBJECTS) $(HEADERS)
 g: $(OBJECTS) $(HEADERS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJECTS) -o $@ -g
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(HEADERS):

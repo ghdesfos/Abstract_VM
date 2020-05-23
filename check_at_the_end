@@ -13,3 +13,4 @@
 - where to put the try and catch, notably for the errors happening inside the classes
 - check what happen when we oveflow values when adding two operands
 - how to have recompilation when a header file is changed
+- free (?)
