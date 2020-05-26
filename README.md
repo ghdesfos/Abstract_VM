@@ -9,7 +9,7 @@ For this project, I implemented a lexer-tokenizer-parser.
 Compile with make
 
 Example: 
-./make files/[file_name]
+./abstract_vm files/[file_name]
 
 ## Assemply language
 ### Simple assembler language that our virtual machine can understand. If there is an error in the set of instructions, the program will throw an exception.
