@@ -30,14 +30,12 @@ void	Parser::_assert(eOperandType operandType, std::string & operandStr)
 	const IOperand *top = this->_stack.back();
 	if (top->getType() != operandType || top->toString() != operandStr)
 		throw AssertError();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 }
 
 void	Parser::_pop(void)
 {
 	if (this->_stack.empty())
 		throw StackEmpty();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	this->_stack.pop_back();
 }
 
@@ -53,7 +51,6 @@ void	Parser::_add(void)
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
 	const IOperand *res = *lhs + *rhs;
@@ -69,7 +66,6 @@ void	Parser::_sub(void)
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
 	const IOperand *res = *lhs - *rhs;
@@ -100,7 +96,6 @@ void	Parser::_div(void)
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
 	const IOperand *res = *lhs / *rhs;
@@ -116,7 +111,6 @@ void	Parser::_mod(void)
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
 	const IOperand *res = *lhs % *rhs;
@@ -131,14 +125,12 @@ void	Parser::_print(void)
 {
 	if (this->_stack.empty())
 		throw StackEmpty();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *top = this->_stack.back();
 	if (top->getType() != eOperandType::Int8)
 		throw PrintWrongType();
-		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	class Int8 *topReinterpreted =
 		const_cast<class Int8 *>(reinterpret_cast<const class Int8 *>(top));
-	std::cout << topReinterpreted->getVal() << std::endl;
+	std::cout << topReinterpreted->getVal();
 }
 
 void	Parser::_exit(void)

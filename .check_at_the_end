@@ -13,13 +13,19 @@
 - where to put the try and catch, notably for the errors happening inside the classes
 - check what happen when we oveflow values when adding two operands
 - how to have recompilation when a header file is changed
-- free (?)
+- free (?) --> it seems that we should free the operands and the tokens (we don't)
 
-
-- questions: pourquoi le assert n'attend pas ;; pour executer --> n'est ce pas le cas pour les autres instructions?
 - commenter les fonctions principales?
+
+Commands:
+- add additional commands, like min / max / debug?
 
 Exceptions:
 - review float and double underflow and overflow Exceptions
 - check if we should not include some exceptions inside the corresponding class
 - check how to update the message when throwing an exception, see example here: https://github.com/mtupikov42/abstract_vm/blob/master/src/Parser.cpp
+
+Precision:
+- we should change the precision of the string streqm before doing an operation on it
+- que se passe-t-il si je passe une valeur avec un point alors que c'est sensé être un int?
+- que faire avec les valeurs +inf, -inf ou nan???

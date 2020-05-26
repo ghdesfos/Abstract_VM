@@ -14,8 +14,6 @@
 #include "parser.hpp"
 #include "exceptions.hpp"
 
-// BESOIN de free tout a la fin
-
 std::map<std::string, actionFct>	Parser::_actionMap =
 {
 	{"pop", &Parser::_pop},
