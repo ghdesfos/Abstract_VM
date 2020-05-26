@@ -29,3 +29,4 @@ Precision:
 - we should change the precision of the string streqm before doing an operation on it
 - que se passe-t-il si je passe une valeur avec un point alors que c'est sensé être un int?
 - que faire avec les valeurs +inf, -inf ou nan???
+- when we do push float(1.) it does not work as there is no value behind the zero

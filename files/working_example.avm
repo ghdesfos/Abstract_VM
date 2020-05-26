@@ -1,0 +1,8 @@
+push int32(42)
+push float(62.8)
+push float(468.67)
+div
+mul
+dump
+assert float(5.62783)
+exit
