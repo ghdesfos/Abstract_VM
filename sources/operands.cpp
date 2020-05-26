@@ -71,7 +71,7 @@ Int8::Int8(void) : _val(0), _str("") { return ; }
 Int8::Int8(const Int8 & rhs) { *this = rhs; }
 Int8::Int8(char n) : _val(n) {
 	std::stringstream s;
-	s << n;
+	s << static_cast<int>(n);
 	this->_str = s.str();
 };
 Int8::~Int8(void) { return ; };
@@ -105,7 +105,7 @@ class Int16 & Int16::operator=(const Int16 & rhs)
 }
 
 int					Int16::getPrecision(void) const { return 0; }
-eOperandType		Int16::getType(void) const { return eOperandType::Int8; }
+eOperandType		Int16::getType(void) const { return eOperandType::Int16; }
 std::string const &	Int16::toString(void) const { return this->_str; }
 
 
@@ -126,7 +126,7 @@ class Int32 & Int32::operator=(const Int32 & rhs)
 }
 
 int					Int32::getPrecision(void) const { return 0; }
-eOperandType		Int32::getType(void) const { return eOperandType::Int8; }
+eOperandType		Int32::getType(void) const { return eOperandType::Int32; }
 std::string const &	Int32::toString(void) const { return this->_str; }
 
 
@@ -147,7 +147,7 @@ class Float & Float::operator=(const Float & rhs)
 }
 
 int					Float::getPrecision(void) const { return 7; }
-eOperandType		Float::getType(void) const { return eOperandType::Int8; }
+eOperandType		Float::getType(void) const { return eOperandType::Float; }
 std::string const &	Float::toString(void) const { return this->_str; }
 
 
@@ -168,5 +168,5 @@ class Double & Double::operator=(const Double & rhs)
 }
 
 int					Double::getPrecision(void) const { return 15; }
-eOperandType		Double::getType(void) const { return eOperandType::Int8; }
+eOperandType		Double::getType(void) const { return eOperandType::Double; }
 std::string const &	Double::toString(void) const { return this->_str; }

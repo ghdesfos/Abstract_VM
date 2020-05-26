@@ -31,6 +31,7 @@ private:
 
 	std::list<struct token>			_tokenList;
 	std::vector<IOperand const *>	_stack;
+	int								_exitFlag;
 
 	static std::map<std::string, actionFct>			_actionMap;
 	static std::map<std::string, instructionFct>	_instructionMap;

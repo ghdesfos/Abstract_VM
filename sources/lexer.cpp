@@ -21,7 +21,7 @@ std::map<std::string, tokenType> Lexer::_patternMap =
 	{"(((int8|int16|int32)\\(-?[0-9]+\\))|((float|double)\\(-?[0-9]+\\.[0-9]+\\)))", PARAM}
 };
 
-Lexer::Lexer(void) : _error(0) {}
+Lexer::Lexer(void) {}
 Lexer::Lexer(const Lexer & l)
 {
 	*this = l;
@@ -30,12 +30,11 @@ Lexer::~Lexer(void) {}
 Lexer & Lexer::operator=(const Lexer & rhs)
 {
 	this->_tokenList = rhs._tokenList;
-	this->_error = rhs._error;
 	this->_patternMap = rhs._patternMap;
 	return (*this);
 }
 
-Lexer::Lexer(int argc, char **argv) : _error(false)
+Lexer::Lexer(int argc, char **argv)
 {
 	if (argc == 1)
 		this->_tokenizer(std::cin, 0);
@@ -48,16 +47,11 @@ Lexer::Lexer(int argc, char **argv) : _error(false)
 			ifs.close();
 		}
 		else
-		{
-			this->_error = true;
 			throw FileNotOpen();
-		}
 	}
 	else
 		throw TooManyArguments();
 }
-
-#define COMMENT_CHAR	';'
 
 void	Lexer::_removeComment(char *line)
 {
@@ -77,7 +71,7 @@ void	Lexer::_addTokenToList(tokenType type, char *value)
 	this->_tokenList.push_back(*new_token);
 }
 
-void	Lexer::_analyseToken(char *str)
+void	Lexer::_analyseToken(char *str, char *line)
 {
 	std::cmatch	match;
 	std::regex	regex;
@@ -89,13 +83,12 @@ void	Lexer::_analyseToken(char *str)
 		if (!match.empty())
 		{
 			this->_addTokenToList(e.second, str);
-			return ;	
+			return ;
 		}
 	}
+	delete [] line;
 	throw NotAValidToken();
 }
-
-#define SEPARATOR	" \t\r"
 
 void	Lexer::_tokenizer(std::istream & stream, int mode)
 {
@@ -118,7 +111,7 @@ void	Lexer::_tokenizer(std::istream & stream, int mode)
 		word = std::strtok(line, SEPARATOR);
 		while (word)
 		{
-			this->_analyseToken(word);
+			this->_analyseToken(word, line);
 			word = std::strtok(NULL, SEPARATOR);
 		}
 

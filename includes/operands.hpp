@@ -46,6 +46,7 @@ public:
 	virtual std::string const & toString( void ) const = 0;
 };
 
+
 class Int8 : public AOperand
 {
 public:

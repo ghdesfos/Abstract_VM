@@ -25,6 +25,9 @@
 #include <list>
 #include <map>
 
+#define COMMENT_CHAR	';'
+#define SEPARATOR	" \t\r"
+
 enum eOperandType
 {
 	Int8,

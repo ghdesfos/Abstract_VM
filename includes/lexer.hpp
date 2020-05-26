@@ -18,10 +18,9 @@ private:
 	void	_tokenizer(std::istream & stream, int mode);
 	void	_removeComment(char *line);
 	void	_addTokenToList(tokenType type, char *value);
-	void	_analyseToken(char *str);
+	void	_analyseToken(char *str, char *line);
 
 	std::list<struct token>					_tokenList;
-	bool									_error;
 	static std::map<std::string, tokenType>	_patternMap;
 
 public:

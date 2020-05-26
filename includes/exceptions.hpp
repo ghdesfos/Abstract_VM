@@ -151,3 +151,13 @@ class PrintWrongType : public std::exception
 	public:
 		virtual const char* what() const throw();
 };
+
+class MissingExitCommand : public std::exception
+{
+	public:
+		MissingExitCommand() {};
+		~MissingExitCommand() {};
+
+	public:
+		virtual const char* what() const throw();
+};

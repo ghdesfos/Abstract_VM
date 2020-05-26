@@ -82,3 +82,8 @@ const char* PrintWrongType::what() const throw()
 {
 	return "No char element on stack top --> the print operation has failed";
 }
+
+const char* MissingExitCommand::what() const throw()
+{
+	return "There was no exit command at the end of the instructions";
+}

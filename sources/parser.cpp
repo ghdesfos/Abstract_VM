@@ -14,12 +14,6 @@
 #include "parser.hpp"
 #include "exceptions.hpp"
 
-// the input is a list of tokens
-// we should check this "stream" of tokens
-// check if the each line corresponds to the syntactic grammar
-// if so, then we should trigger the action
-// 
-
 // BESOIN de free tout a la fin
 
 std::map<std::string, actionFct>	Parser::_actionMap =
@@ -43,15 +37,15 @@ std::map<std::string, instructionFct>	Parser::_instructionMap =
 
 std::map<std::string, eOperandType>		Parser::_operandTypeMap =
 {
-	{"Int8", eOperandType::Int8},
-	{"Int16", eOperandType::Int16},
-	{"Int32", eOperandType::Int32},
-	{"Float", eOperandType::Float},
-	{"Double", eOperandType::Double}
+	{"int8", eOperandType::Int8},
+	{"int16", eOperandType::Int16},
+	{"int32", eOperandType::Int32},
+	{"float", eOperandType::Float},
+	{"double", eOperandType::Double}
 };
 
-Parser::Parser(void) {}
-Parser::Parser(const Parser & rhs)
+Parser::Parser(void) : _exitFlag(0) {}
+Parser::Parser(const Parser & rhs) : _exitFlag(0)
 {
 	*this = rhs;
 }
@@ -64,23 +58,9 @@ Parser & Parser::operator=(const Parser & rhs)
 }
 
 Parser::Parser(std::list<struct token> tokenList)
-	: _tokenList(tokenList)
+	: _tokenList(tokenList), _exitFlag(0)
 {
 	this->_parserizer();
-}
-
-/*
-**	possible grammar sequence: [NL], [ACTION] [NL], [INSTR] [PARAM] [NL]
-*/
-
-void			Parser::_expect(tokenType type,
-							std::list<struct token>::iterator it)
-{
-	if (it == this->_tokenList.end())
-		throw SyntaxGrammarError();
-	if (type == it->type)
-		return ;
-	throw SyntaxGrammarError();
 }
 
 void			Parser::_triggerAction(std::string & action)
@@ -127,31 +107,65 @@ void			Parser::_triggerInstruction(std::string & instruction,
 	throw UnknownInstruction();
 }
 
+/*
+**	possible grammar sequence: [NL], [ACTION] [NL], [INSTR] [PARAM] [NL]
+*/
+
+void			Parser::_expect(tokenType type,
+							std::list<struct token>::iterator it)
+{
+	if (it == this->_tokenList.end())
+		throw SyntaxGrammarError();
+	if (type == it->type)
+		return ;
+	throw SyntaxGrammarError();
+}
+
 void			Parser::_parserizer(void)
 {
 	for (std::list<struct token>::iterator it = this->_tokenList.begin()
 			; it != this->_tokenList.end() ; it++)
 	{
-		// try {} to surround all below errors ?
-		if (it->type == tokenType::NL)
-			continue ;
-		else if (it->type == tokenType::ACTION)
+		try
 		{
-			auto currIt = it;
-			auto nextIt = ++it;
-			this->_expect(tokenType::NL, nextIt);
-			this->_triggerAction(currIt->value);
-		}
-		else if (it->type == tokenType::INSTR)
+			if (it->type == tokenType::NL)
+				continue ;
+			else if (it->type == tokenType::ACTION)
+			{
+				auto currIt = it;
+				auto nextIt = ++it;
+				this->_expect(tokenType::NL, nextIt);
+				this->_triggerAction(currIt->value);
+			}
+			else if (it->type == tokenType::INSTR)
+			{
+				auto currIt = it;
+				auto nextIt = ++it;
+				auto nextNextIt = ++it;
+				this->_expect(tokenType::PARAM, nextIt);
+				this->_expect(tokenType::NL, nextNextIt);
+				this->_triggerInstruction(currIt->value, nextIt->value);
+			}
+			else
+				throw SyntaxGrammarError();
+		}		
+		catch (UnknownAction & e)
 		{
-			auto currIt = it;
-			auto nextIt = ++it;
-			auto nextNextIt = ++it;
-			this->_expect(tokenType::PARAM, nextIt);
-			this->_expect(tokenType::NL, nextNextIt);
-			this->_triggerInstruction(currIt->value, nextIt->value);
+			std::cerr << e.what() << std::endl;
 		}
-		else
-			throw SyntaxGrammarError();
+		catch (UnknownType & e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
+		catch (UnknownInstruction & e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
+		catch (SyntaxGrammarError & e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
 	}
+	if (!_exitFlag)
+		throw MissingExitCommand();
 }

@@ -19,15 +19,9 @@ OperandFactory	Parser::_factory;
 
 void	Parser::_push(eOperandType operandType, std::string & operandStr)
 {
-//	const IOperand *operand = Parser::_factory.createOperand(operandType, operandStr);
-	OperandFactory & test = Parser::_factory;
-	(void)test;
-	
 	const IOperand *operand = this->_factory.createOperand(operandType, operandStr);
 	this->_stack.push_back(operand);
 }
-
-// Beware of the memory leaks below, when we throw after removing an element from the stack
 
 void	Parser::_assert(eOperandType operandType, std::string & operandStr)
 {
@@ -43,6 +37,7 @@ void	Parser::_pop(void)
 {
 	if (this->_stack.empty())
 		throw StackEmpty();
+		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	this->_stack.pop_back();
 }
 
@@ -53,18 +48,17 @@ void	Parser::_dump(void)
 		std::cout << (*it)->toString() << std::endl;
 }
 
-// SHOULD we do a try/catch if ever the operation does not work?
-
 void	Parser::_add(void)
 {
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
+		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
-	this->_stack.pop_back();
-	this->_stack.pop_back();
 	const IOperand *res = *lhs + *rhs;
+	this->_stack.pop_back();
+	this->_stack.pop_back();
 	delete rhs;
 	delete lhs;
 	this->_stack.push_back(res);
@@ -75,11 +69,12 @@ void	Parser::_sub(void)
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
+		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
-	this->_stack.pop_back();
-	this->_stack.pop_back();
 	const IOperand *res = *lhs - *rhs;
+	this->_stack.pop_back();
+	this->_stack.pop_back();
 	delete rhs;
 	delete lhs;
 	this->_stack.push_back(res);
@@ -92,9 +87,9 @@ void	Parser::_mul(void)
 		throw NumberOfElementsTooLow();
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
-	this->_stack.pop_back();
-	this->_stack.pop_back();
 	const IOperand *res = *lhs * *rhs;
+	this->_stack.pop_back();
+	this->_stack.pop_back();
 	delete rhs;
 	delete lhs;
 	this->_stack.push_back(res);
@@ -105,11 +100,12 @@ void	Parser::_div(void)
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
+		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
-	this->_stack.pop_back();
-	this->_stack.pop_back();
 	const IOperand *res = *lhs / *rhs;
+	this->_stack.pop_back();
+	this->_stack.pop_back();
 	delete rhs;
 	delete lhs;
 	this->_stack.push_back(res);
@@ -120,11 +116,12 @@ void	Parser::_mod(void)
 	int size = this->_stack.size();
 	if (size < 2)
 		throw NumberOfElementsTooLow();
+		// !!!!! THE PROGRAM SHOULD STOP IN THIS CASE !!!!!
 	const IOperand *rhs = this->_stack.at(size - 1);
 	const IOperand *lhs = this->_stack.at(size - 2);
-	this->_stack.pop_back();
-	this->_stack.pop_back();
 	const IOperand *res = *lhs % *rhs;
+	this->_stack.pop_back();
+	this->_stack.pop_back();
 	delete rhs;
 	delete lhs;
 	this->_stack.push_back(res);
@@ -146,5 +143,5 @@ void	Parser::_print(void)
 
 void	Parser::_exit(void)
 {
-	// TBD
+	std::exit(0);
 }

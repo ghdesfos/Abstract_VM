@@ -14,3 +14,12 @@
 - check what happen when we oveflow values when adding two operands
 - how to have recompilation when a header file is changed
 - free (?)
+
+
+- questions: pourquoi le assert n'attend pas ;; pour executer --> n'est ce pas le cas pour les autres instructions?
+- commenter les fonctions principales?
+
+Exceptions:
+- review float and double underflow and overflow Exceptions
+- check if we should not include some exceptions inside the corresponding class
+- check how to update the message when throwing an exception, see example here: https://github.com/mtupikov42/abstract_vm/blob/master/src/Parser.cpp
