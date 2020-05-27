@@ -6,13 +6,18 @@ Abstract-VM is a virtual machine that can interpret and execute commands written
 For this project, I implemented a lexer-tokenizer-parser.
 
 ## How to use the virtual machine
-Compile with make
+Compile with:
+```sh
+make
+```
 
-Example: 
+Run with:
+```sh
 ./abstract_vm files/[file_name]
+```
 
 ## Assemply language
-### Simple assembler language that our virtual machine can understand. If there is an error in the set of instructions, the program will throw an exception.
+Simple assembler language that our virtual machine can understand. If there is an error in the set of instructions, the program will throw an exception.
 | Instruction  |  Details |
 |---|---|
 | **push _value_**  | Pushes the value at the top of the stack. The _value_ must have one of the following form: <ul><li>int8(n) : Creates an 8-bit integer with value n.</li><li>int16(n) : Creates a 16-bit integer with value n.</li><li>int32(n) : Creates a 32-bit integer with value n.</li><li>float(z) : Creates a float with value z.</li><li>double(z) : Creates a double with value z.</li></ul>|
