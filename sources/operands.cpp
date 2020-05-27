@@ -22,7 +22,10 @@ OperandFactory	AOperand::factory;
 IOperand const * AOperand::operator+( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
+	int precision = std::max(this->getPrecision(), rhs.getPrecision());
 	std::stringstream sstr;
+	if (precision > 0)
+		sstr << std::setprecision(precision);
 	sstr << std::stod(this->toString()) + std::stod(rhs.toString());
 	return (this->factory.createOperand(type, sstr.str()));
 }
@@ -30,7 +33,10 @@ IOperand const * AOperand::operator+( IOperand const & rhs ) const
 IOperand const * AOperand::operator-( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
+	int precision = std::max(this->getPrecision(), rhs.getPrecision());
 	std::stringstream sstr;
+	if (precision > 0)
+		sstr << std::setprecision(precision);
 	sstr << std::stod(this->toString()) - std::stod(rhs.toString());
 	return (this->factory.createOperand(type, sstr.str()));
 }
@@ -38,7 +44,10 @@ IOperand const * AOperand::operator-( IOperand const & rhs ) const
 IOperand const * AOperand::operator*( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
+	int precision = std::max(this->getPrecision(), rhs.getPrecision());
 	std::stringstream sstr;
+	if (precision > 0)
+		sstr << std::setprecision(precision);
 	sstr << std::stod(this->toString()) * std::stod(rhs.toString());
 	return (this->factory.createOperand(type, sstr.str()));
 }
@@ -46,9 +55,12 @@ IOperand const * AOperand::operator*( IOperand const & rhs ) const
 IOperand const * AOperand::operator/( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
-	std::stringstream sstr;
 	if (std::stod(rhs.toString()) == 0.0)
 		throw DivisionByZero();
+	int precision = std::max(this->getPrecision(), rhs.getPrecision());
+	std::stringstream sstr;
+	if (precision > 0)
+		sstr << std::setprecision(precision);
 	sstr << std::stod(this->toString()) / std::stod(rhs.toString());
 	return (this->factory.createOperand(type, sstr.str()));
 }
@@ -56,9 +68,12 @@ IOperand const * AOperand::operator/( IOperand const & rhs ) const
 IOperand const * AOperand::operator%( IOperand const & rhs ) const
 {
 	eOperandType type = std::max(this->getType(), rhs.getType());
-	std::stringstream sstr;
 	if (std::stod(rhs.toString()) == 0.0)
 		throw DivisionByZero();
+	int precision = std::max(this->getPrecision(), rhs.getPrecision());
+	std::stringstream sstr;
+	if (precision > 0)
+		sstr << std::setprecision(precision);
 	sstr << std::stoi(this->toString()) % std::stoi(rhs.toString());
 	return (this->factory.createOperand(type, sstr.str()));
 }
@@ -135,6 +150,7 @@ Float::Float(void) : _val(0), _str("") { return ; }
 Float::Float(const Float & rhs) { *this = rhs; }
 Float::Float(float n) : _val(n) {
 	std::stringstream s;
+	s << std::setprecision(7);
 	s << n;
 	this->_str = s.str();
 };
@@ -156,6 +172,7 @@ Double::Double(void) : _val(0), _str("") { return ; }
 Double::Double(const Double & rhs) { *this = rhs; }
 Double::Double(double n) : _val(n) {
 	std::stringstream s;
+	s << std::setprecision(15);
 	s << n;
 	this->_str = s.str();
 };

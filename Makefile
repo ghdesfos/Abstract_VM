@@ -18,8 +18,6 @@ RM			= /bin/rm -rf
 
 INCLUDES	= -I includes/
 
-HEADERS		= includes/abstract_vm.h
-
 FUNCTIONS	= abstract_vm.cpp\
 				operands.cpp\
 				operand_factory.cpp\
@@ -30,22 +28,27 @@ FUNCTIONS	= abstract_vm.cpp\
 			
 FILES		= $(addprefix sources/, $(FUNCTIONS))
 OBJECTS		= $(FILES:.cpp=.o)
+DEPS		= $(OBJECTS:%.o=%.d)
 
-all: $(NAME)
+all: $(DEPS) $(NAME)
 
-$(NAME): $(OBJECTS) $(HEADERS)
+$(NAME): $(OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJECTS) -o $@
 
-g: $(OBJECTS) $(HEADERS)
+$(DEPS):
+	@touch $@
+
+-include $(DEPS)
+
+g: $(OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJECTS) -o $@ -g
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-$(HEADERS):
+	$(CC) $(CFLAGS) -MMD $(INCLUDES) -c $< -o $@
 
 clean:
 	$(RM) $(OBJECTS)
+	$(RM) $(DEPS)
 	$(RM) *.gch
 	$(RM) *.dSYM
 

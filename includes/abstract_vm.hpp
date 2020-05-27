@@ -24,6 +24,7 @@
 #include <cstring>
 #include <list>
 #include <map>
+#include <iomanip>
 
 #define COMMENT_CHAR	';'
 #define SEPARATOR	" \t\r"
