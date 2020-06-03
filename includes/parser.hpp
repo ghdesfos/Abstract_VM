@@ -23,13 +23,13 @@ class Parser
 private:
 	void			_parserizer(void);
 	void			_expect(tokenType type,
-								std::list<struct token>::iterator it);
+								std::list<struct token *>::iterator it);
 	void			_triggerAction(std::string & action);
 	eOperandType	_getParameterType(std::string & str);
 	void			_triggerInstruction(std::string & instruction,
 											std::string & wrappedParam);
 
-	std::list<struct token>			_tokenList;
+	std::list<struct token *>		_tokenList;
 	std::vector<IOperand const *>	_stack;
 	int								_exitFlag;
 
@@ -39,6 +39,7 @@ private:
 
 	static OperandFactory	_factory;
 
+	/* ACTIONS */
 	void	_pop(void);
 	void	_dump(void);
 	void	_add(void);
@@ -49,6 +50,14 @@ private:
 	void	_print(void);
 	void	_exit(void);
 
+	/* BONUS ACTIONS */
+	void	_b_min(void);
+	void	_b_max(void);
+	void	_b_avg(void);
+	void	_b_tokens(void);
+	void	_b_stack(void);
+
+	/* INSTRUCTIONS */
 	void	_push(eOperandType operandType, std::string & operand);
 	void	_assert(eOperandType operandType, std::string & operand);
 
@@ -57,5 +66,5 @@ public:
 	Parser(const Parser & rhs);
 	~Parser(void);
 	Parser & operator=(const Parser & rhs);
-	Parser(std::list<struct token> tokenList);
+	Parser(std::list<struct token *> tokenList);
 };

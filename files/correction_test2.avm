@@ -1,0 +1,6 @@
+; expected: error due to a division by zero
+
+push int32(42)
+push int32(0)
+div
+exit

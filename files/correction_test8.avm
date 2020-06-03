@@ -1,3 +1,5 @@
+; expected: print 'plop!'
+
 push int8(33) ;!
 push int8(112) ;p
 push int8(111) ;o

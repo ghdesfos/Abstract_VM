@@ -16,42 +16,14 @@
 
 std::map<std::string, tokenType> Lexer::_patternMap =
 {
-	{"(and|or|pop|dump|add|sub|mul|div|mod|exit|print)", ACTION},
+	{"(and|or|pop|dump|add|sub|mul|div|mod|exit|print|b_min|b_max|b_avg|b_tokens|b_stack)", ACTION},
 	{"(push|assert)", INSTR},
 	{"(((int8|int16|int32)\\(-?[0-9]+\\))|((float|double)\\(-?[0-9]+\\.[0-9]+\\)))", PARAM}
 };
 
-Lexer::Lexer(void) {}
-Lexer::Lexer(const Lexer & l)
-{
-	*this = l;
-}
-Lexer::~Lexer(void) {}
-Lexer & Lexer::operator=(const Lexer & rhs)
-{
-	this->_tokenList = rhs._tokenList;
-	this->_patternMap = rhs._patternMap;
-	return (*this);
-}
-
-Lexer::Lexer(int argc, char **argv)
-{
-	if (argc == 1)
-		this->_tokenizer(std::cin, 0);
-	else if (argc == 2)
-	{
-		std::ifstream ifs(argv[1]);
-		if (ifs.is_open())
-		{
-			this->_tokenizer(ifs, 1);
-			ifs.close();
-		}
-		else
-			throw FileNotOpen();
-	}
-	else
-		throw TooManyArguments();
-}
+/*
+**	Class methods
+*/
 
 void	Lexer::_removeComment(char *line)
 {
@@ -68,7 +40,7 @@ void	Lexer::_addTokenToList(tokenType type, char *value)
 
 	new_token->type = type;
 	new_token->value.assign(value);
-	this->_tokenList.push_back(*new_token);
+	this->_tokenList.push_back(new_token);
 }
 
 void	Lexer::_analyseToken(char *str, char *line)
@@ -120,7 +92,56 @@ void	Lexer::_tokenizer(std::istream & stream, int mode)
 	}
 }
 
-std::list<struct token>	Lexer::getTokenList(void)
+std::list<struct token *>	Lexer::getTokenList(void)
 {
 	return (this->_tokenList);
+}
+
+
+/*
+**	Constructors and destructor
+*/
+
+Lexer::Lexer(int argc, char **argv)
+{
+	if (argc == 1)
+		this->_tokenizer(std::cin, 0);
+	else if (argc == 2)
+	{
+		std::ifstream ifs(argv[1]);
+		if (ifs.is_open())
+		{
+			this->_tokenizer(ifs, 1);
+			ifs.close();
+		}
+		else
+			throw FileNotOpen();
+	}
+	else
+		throw TooManyArguments();
+}
+
+Lexer::Lexer(void) {}
+Lexer::Lexer(const Lexer & l)
+{
+	*this = l;
+}
+Lexer::~Lexer(void)
+{
+	for (auto& x : this->_tokenList)
+		delete x;
+}
+Lexer & Lexer::operator=(const Lexer & rhs)
+{
+	std::list<struct token *>::const_iterator it;
+
+	for (it = rhs._tokenList.begin(); it != rhs._tokenList.end(); it++)
+	{
+		struct token *copy = new struct token;
+		copy->type = (*it)->type;
+		copy->value.assign((*it)->value);
+		this->_tokenList.push_back(copy);
+	}
+	this->_patternMap = rhs._patternMap;
+	return (*this);
 }

@@ -4,5 +4,5 @@ push float(468.67)
 div
 mul
 dump
-assert float(5.62783)
+assert float(5.62784)
 exit

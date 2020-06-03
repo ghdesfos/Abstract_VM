@@ -32,3 +32,8 @@ Simple assembler language that our virtual machine can understand. If there is a
 | **div** |  Unstacks the first two values on the stack, divides them, then stacks the result. |
 | **mod** | Unstacks the first two values on the stack, calculates the modulus, then stacks the result. |
 | **print** | Asserts that the value at the top of the stack is an 8-bit integer. (If not, exception will be thrown), then interprets it as an ASCII value and displays the corresponding character on the standard output. |
+| **b_min** | Bonus: prints the minimum of the values on the stack. |
+| **b_max** | Bonus: prints the maximum of the values on the stack. |
+| **b_avg** | Bonus: prints the average of the values on the stack. |
+| **b_tokens** | Bonus: prints all token obtained by the tokenizer. |
+| **b_stack** | Bonus: prints the value of all elements on the stack. |

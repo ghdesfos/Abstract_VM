@@ -1,0 +1,5 @@
+; expected: too few elements to do add operation
+
+push int32(42)
+add
+exit

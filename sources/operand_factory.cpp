@@ -11,106 +11,66 @@
 /* ************************************************************************** */
 
 #include "abstract_vm.hpp"
-#include "operands.hpp"
+#include "operand_template.hpp"
 #include "exceptions.hpp"
 
 IOperand const * OperandFactory::createInt8( std::string const & value ) const
 {
-	int nb;
-	try
-	{
-		nb = std::stoi(value);
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-	if (nb < std::numeric_limits<char>::min())
+	long double nb = std::stold(value);
+	if (nb < std::numeric_limits<int8_t>::min())
 		throw Underflow();
-	if (nb > std::numeric_limits<char>::max())
+	if (nb > std::numeric_limits<int8_t>::max())
 		throw Overflow();
-	class Int8 *operand = new class Int8(static_cast<char>(nb));
+	IOperand *operand = new Operand<int8_t>(static_cast<int8_t>(nb));
 	return (operand);
 }
 
 IOperand const * OperandFactory::createInt16( std::string const & value ) const
 {
-	int nb;
-	try
-	{
-		nb = std::stoi(value);
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-	if (nb < std::numeric_limits<short>::min())
+	long double nb = std::stold(value);
+	if (nb < std::numeric_limits<int16_t>::min())
 		throw Underflow();
-	if (nb > std::numeric_limits<short>::max())
+	if (nb > std::numeric_limits<int16_t>::max())
 		throw Overflow();
-	class Int16 *operand = new class Int16(static_cast<short>(nb));
+	IOperand *operand = new Operand<int16_t>(static_cast<int16_t>(nb));
 	return (operand);
 }
 
 IOperand const * OperandFactory::createInt32( std::string const & value ) const
 {
-	int nb;
-	try
-	{
-		nb = std::stoi(value);
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-	if (nb < std::numeric_limits<int>::min())
+	long double nb = std::stold(value);
+	if (nb < std::numeric_limits<int32_t>::min())
 		throw Underflow();
-	if (nb > std::numeric_limits<int>::max())
+	if (nb > std::numeric_limits<int32_t>::max())
 		throw Overflow();
-	class Int32 *operand = new class Int32(nb);
+	IOperand *operand = new Operand<int32_t>(static_cast<int32_t>(nb));
 	return (operand);
 }
 
 IOperand const * OperandFactory::createFloat( std::string const & value ) const
 {
-	float nb;
-	try
-	{
-		nb = std::stof(value);
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-	class Float *operand = new class Float(nb);
+	long double nb = std::stold(value);
+	if (nb < std::numeric_limits<float>::min())
+		throw Underflow();
+	if (nb > std::numeric_limits<float>::max())
+		throw Overflow();
+	IOperand *operand = new Operand<float>(static_cast<float>(nb));
 	return (operand);
 }
 
 IOperand const * OperandFactory::createDouble( std::string const & value ) const
 {
-	double nb;
-	try
-	{
-		nb = std::stod(value);
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-	class Double *operand = new class Double(nb);
+	long double nb = std::stold(value);
+	if (nb < std::numeric_limits<double>::min())
+		throw Underflow();
+	if (nb > std::numeric_limits<double>::max())
+		throw Overflow();
+	IOperand *operand = new Operand<double>(static_cast<double>(nb));
 	return (operand);
 }
 
 IOperand const * OperandFactory::createOperand( eOperandType type, std::string const & value ) const
 {
-	IOperand const *operand;
-	try
-	{
-		operand = (this->*_createOperandArray[type])(value);
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
+	IOperand const *operand = (this->*_createOperandArray[type])(value);
 	return (operand);
 }

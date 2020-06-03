@@ -18,6 +18,11 @@ const char* DivisionByZero::what() const throw()
 	return "Division or modulo by 0 is impossible";
 }
 
+const char* ModuloWithNonIntegers::what() const throw()
+{
+	return "Modulo with non integer types is not possible";
+}
+
 const char* Underflow::what() const throw()
 {
 	return "Underflow exception";

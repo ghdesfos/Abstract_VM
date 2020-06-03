@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef EXCEPTIONS_HPP
+# define EXCEPTIONS_HPP
+
 #include "abstract_vm.hpp"
 
 class DivisionByZero : public std::exception
@@ -22,20 +25,30 @@ class DivisionByZero : public std::exception
 		virtual const char* what() const throw();
 };
 
-class Underflow : public std::exception
+class ModuloWithNonIntegers : public std::exception
 {
 	public:
-		Underflow() {};
+		ModuloWithNonIntegers() {};
+		~ModuloWithNonIntegers() {};
+
+	public:
+		virtual const char* what() const throw();
+};
+
+class Underflow : public std::underflow_error
+{
+	public:
+		Underflow() : std::underflow_error("") {};
 		~Underflow() {};
 
 	public:
 		virtual const char* what() const throw();
 };
 
-class Overflow : public std::exception
+class Overflow : public std::overflow_error
 {
 	public:
-		Overflow() {};
+		Overflow() : std::overflow_error("") {};
 		~Overflow() {};
 
 	public:
@@ -161,3 +174,5 @@ class MissingExitCommand : public std::exception
 	public:
 		virtual const char* what() const throw();
 };
+
+#endif

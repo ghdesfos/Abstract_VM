@@ -1,0 +1,4 @@
+; expected: pop operation impossible on empty stack
+
+pop
+exit

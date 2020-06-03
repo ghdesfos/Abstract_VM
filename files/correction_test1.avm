@@ -1,10 +1,13 @@
+; expected: work fine
+
 push int32(42)
 push int32(33)
-add
+add ;poney
 push float(44.55)
 mul
 push double(42.42)
 push int32(42)
-dump pop
+dump
+pop
 assert double(42.42)
 exit

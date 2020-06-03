@@ -20,8 +20,8 @@ private:
 	void	_addTokenToList(tokenType type, char *value);
 	void	_analyseToken(char *str, char *line);
 
-	std::list<struct token>					_tokenList;
-	static std::map<std::string, tokenType>	_patternMap;
+	std::list<struct token *>					_tokenList;
+	static std::map<std::string, tokenType>		_patternMap;
 
 public:
 	Lexer(void);
@@ -31,5 +31,5 @@ public:
 
 	Lexer(int argc, char **argv);
 
-	std::list<struct token>	getTokenList(void);
+	std::list<struct token *>	getTokenList(void);
 };

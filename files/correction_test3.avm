@@ -1,0 +1,4 @@
+; expected: overflow error
+
+push int16(999999999999999999999999999)
+exit
