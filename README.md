@@ -35,5 +35,5 @@ Simple assembler language that our virtual machine can understand. If there is a
 | **b_min** | Bonus: prints the minimum of the values on the stack. |
 | **b_max** | Bonus: prints the maximum of the values on the stack. |
 | **b_avg** | Bonus: prints the average of the values on the stack. |
-| **b_tokens** | Bonus: prints all token obtained by the tokenizer. |
+| **b_tokens** | Bonus: prints all token obtained by the lexer. |
 | **b_stack** | Bonus: prints the value of all elements on the stack. |
