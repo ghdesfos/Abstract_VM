@@ -24,8 +24,6 @@ Simple assembler language that our virtual machine can understand. If there is a
 | **pop**  | Unstacks the value from the top of the stack. |
 |  **dump**  |  Displays each value of the stack, from the most recent one to the oldest one. |
 | **assert _value_** |  Asserts that the value at the top of the stack is equal to the one passed as parameter for this instruction. |
-| **more _value_** |  Asserts that the value at the top of the stack is less to the one passed as parameter for this instruction. |
-| **less _value_** |  Asserts that the value at the top of the stack is more to the one passed as parameter for this instruction. |
 | **add**  |  Unstacks the first two values on the stack, adds them together and stacks the result. |
 | **sub** |  Unstacks the first two values on the stack, subtracts them, then stacks the result. |
 | **mul** |  Unstacks the first two values on the stack, multiplies them, then stacks the result. |
